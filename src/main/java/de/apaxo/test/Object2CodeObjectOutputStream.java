@@ -10,6 +10,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +66,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
     }
 
     /**
-     * Checks if the clazz is a primitive class
-     * or if it is a boxed class.
+     * Checks if the clazz is a primitive class or if it is a boxed class.
      * 
      * @param clazz
      * @return
@@ -108,11 +108,18 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                         .invoke(o);
                 if (propertyValue != null) {
                     if (propertyClass.isPrimitive()) {
-                        out.write((beanName + "."
-                                + propertyDescriptor.getWriteMethod().getName()
-                                + "("
-                                + formatType(propertyClass, propertyValue) + ");\n")
-                                .getBytes());
+                        Method writeMethod = propertyDescriptor
+                                .getWriteMethod();
+                        if (writeMethod != null) {
+                            out.write((beanName + "." + writeMethod.getName()
+                                    + "("
+                                    + formatType(propertyClass, propertyValue) + ");\n")
+                                    .getBytes());
+                        } else {
+                            log.warning("Can not find write method for: "
+                                    + o.getClass().getName() + " "
+                                    + propertyDescriptor.getName());
+                        }
                     } else if (propertyClass == String.class) {
                         out.write((beanName + "."
                                 + propertyDescriptor.getWriteMethod().getName()
@@ -176,11 +183,21 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                     .get(propertyValue) : writeObject(
                                     propertyValue, clazz2count,
                                     object2variableName);
-                            out.write((beanName
-                                    + "."
-                                    + propertyDescriptor.getWriteMethod()
-                                            .getName() + "(" + newBeanName + ");\n")
-                                    .getBytes());
+
+                            Method writeMethod = propertyDescriptor
+                                    .getWriteMethod();
+                            if (writeMethod != null) {
+                                out.write((beanName
+                                        + "."
+                                        + propertyDescriptor.getWriteMethod()
+                                                .getName() + "(" + newBeanName + ");\n")
+                                        .getBytes());
+                            } else {
+                                log.warning("Can not find write method for: "
+                                        + o.getClass().getName() + " "
+                                        + propertyDescriptor.getName());
+                            }
+
                         }
                     }
                 }
