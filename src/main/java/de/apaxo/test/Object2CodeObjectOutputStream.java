@@ -35,17 +35,29 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 
     private OutputStream out;
 
+    /**
+    * Generate a new Object2CodeObjectOutputStream based on an OutputStream
+    * e.g. Object2CodeObjectOutputStream oos = new Object2CodeObjectOutputStream(System.out);
+    * There is also a shortcut in {@link de.apaxo.test.Serialize#object2code(Object)}
+    */
     public Object2CodeObjectOutputStream(OutputStream out) throws IOException,
             SecurityException {
         this.out = out;
     }
-    
+   
+    /**
+    * Writes an object ussing all getters and setters
+    * to the given output stream.
+    * @param o the object to write
+    */    
     public void writeObject(Object o) {
     	writeObject(o, false);
     }
 
     /**
      * Writes an object into the given output stream.
+     * @param o the Object to write
+     * @param onlyPropertiesWithMatchingField use only fields that have a corresponding private field?
      */
     public void writeObject(Object o, boolean onlyPropertiesWithMatchingField) {
         if (o == null) {
@@ -72,8 +84,8 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
     /**
      * Checks if the clazz is a primitive class or if it is a boxed class.
      * 
-     * @param clazz
-     * @return
+     * @param clazz the class to check
+     * @return is it a primitive or box class
      */
     private boolean isPrimitiveOrBoxClass(Class<?> clazz) {
         return clazz.isPrimitive() || clazz == Integer.class
@@ -83,16 +95,19 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                 || clazz == Character.class || clazz == String.class;
     }
 
+    /**
+    * Private function that is doing the recursive work.
+    * @param o the object to write
+    * @param clazz2count Counting how often a certain class was already produced
+    * @param object2variableName a map from a certain object that is in a property to the variable name
+    * @param onlyPropertiesWithMatchingField check that there is a private property for this field
+    */
     private String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
             Map<Object, String> object2variableName, boolean onlyPropertiesWithMatchingField) {
         try {
             Class<?> clazz = o.getClass();
             // write primitive types directly out
-            if (clazz.isPrimitive() || clazz == Integer.class
-                    || clazz == Byte.class || clazz == Boolean.class
-                    || clazz == Short.class || clazz == Long.class
-                    || clazz == Double.class || clazz == Float.class
-                    || clazz == Character.class) {
+            if (isPrimitiveOrBoxClass(clazz)) {
                 return formatType(clazz, o);
             } else if (clazz == String.class) {
                 return "\"" + o.toString() + "\"";
