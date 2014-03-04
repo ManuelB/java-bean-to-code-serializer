@@ -39,11 +39,15 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
             SecurityException {
         this.out = out;
     }
+    
+    public void writeObject(Object o) {
+    	writeObject(o, false);
+    }
 
     /**
      * Writes an object into the given output stream.
      */
-    public void writeObject(Object o) {
+    public void writeObject(Object o, boolean onlyPropertiesWithMatchingField) {
         if (o == null) {
             log.warning("Given object is null.");
             return;
@@ -53,7 +57,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
         Map<Class<?>, Integer> clazz2count = new HashMap<Class<?>, Integer>();
         // this map contains a mapping from objects to their assigned names
         Map<Object, String> object2variableName = new HashMap<Object, String>();
-        String name = writeObject(o, clazz2count, object2variableName);
+        String name = writeObject(o, clazz2count, object2variableName, onlyPropertiesWithMatchingField);
         Class<?> clazz = o.getClass();
         if (isPrimitiveOrBoxClass(clazz)) {
             // write the simple type to the stream
@@ -80,7 +84,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
     }
 
     private String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
-            Map<Object, String> object2variableName) {
+            Map<Object, String> object2variableName, boolean onlyPropertiesWithMatchingField) {
         try {
             Class<?> clazz = o.getClass();
             // write primitive types directly out
@@ -103,6 +107,14 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                     + clazz.getName() + "();\n").getBytes());
             for (PropertyDescriptor propertyDescriptor : beanInfo
                     .getPropertyDescriptors()) {
+            	if (onlyPropertiesWithMatchingField) {
+            		try {
+    					clazz.getDeclaredField(propertyDescriptor.getName());
+    				} catch (NoSuchFieldException e) {
+    					log.info("Skipping method without matching field: " + propertyDescriptor.getName());
+    					continue;
+    				}
+            	}
                 Class<?> propertyClass = propertyDescriptor.getPropertyType();
                 Object propertyValue = propertyDescriptor.getReadMethod()
                         .invoke(o);
@@ -138,7 +150,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                     .getBytes());
                             for (Object item : collection) {
                                 String itemName = writeObject(item,
-                                        clazz2count, object2variableName);
+                                        clazz2count, object2variableName, onlyPropertiesWithMatchingField);
                                 out.write((collectionName + ".add(" + itemName + ");\n")
                                         .getBytes());
                             }
@@ -162,12 +174,12 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                         .containsKey(item.getKey()) ? object2variableName
                                         .get(item.getKey()) : writeObject(
                                         item.getKey(), clazz2count,
-                                        object2variableName);
+                                        object2variableName, onlyPropertiesWithMatchingField);
                                 String valueName = object2variableName
                                         .containsKey(item.getValue()) ? object2variableName
                                         .get(item.getValue()) : writeObject(
                                         item.getValue(), clazz2count,
-                                        object2variableName);
+                                        object2variableName, onlyPropertiesWithMatchingField);
 
                                 out.write((mapName + ".put(" + keyName + ", "
                                         + valueName + ");\n").getBytes());
@@ -182,7 +194,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                     .containsKey(propertyValue) ? object2variableName
                                     .get(propertyValue) : writeObject(
                                     propertyValue, clazz2count,
-                                    object2variableName);
+                                    object2variableName, onlyPropertiesWithMatchingField);
 
                             Method writeMethod = propertyDescriptor
                                     .getWriteMethod();
