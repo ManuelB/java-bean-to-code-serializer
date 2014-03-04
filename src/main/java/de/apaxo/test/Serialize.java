@@ -25,8 +25,8 @@ public class Serialize {
      * 
      * System.out.println(object2code(myBean));
      * 
-     * @param o
-     * @return
+     * @param o the object to serialze
+     * @return a string containing the java code for creating the object
      */
     public static String object2code(Object o) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
