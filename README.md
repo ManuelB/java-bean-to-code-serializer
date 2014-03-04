@@ -8,4 +8,13 @@ This should be used together with mockito and https://github.com/ManuelB/mockito
 To see a code example:
  * [Object2CodeObjectOutputStreamTest.java](https://github.com/ManuelB/java-bean-to-code-serializer/blob/master/src/test/java/de/apaxo/test/Object2CodeObjectOutputStreamTest.java)
 
+To use it add the following maven dependency:
+```
+  <dependency>
+    <groupId>de.apaxo.test</groupId>
+    <artifactId>java-bean-to-code-serializer</artifactId>
+    <version>0.6</version>
+  </dependency>
+```
+
 This code is used in the [Apaxo GmbH Platform](http://www.apaxo.de)
