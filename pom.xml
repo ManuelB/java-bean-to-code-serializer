@@ -31,6 +31,7 @@
     <url>http://www.apaxo.de</url>
   </organization>
   <scm>
+    <url>https://source.apaxo.de/svn/semrecsys/trunk/java-bean-to-code-serializer</url>
     <connection>scm:svn:https://source.apaxo.de/svn/semrecsys/trunk/java-bean-to-code-serializer</connection>
   </scm>
   <developers>
