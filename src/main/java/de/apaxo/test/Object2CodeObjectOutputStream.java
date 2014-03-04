@@ -125,7 +125,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                 + propertyDescriptor.getWriteMethod().getName()
                                 + "(\"" + propertyValue + "\");\n").getBytes());
                     } else {
-                        if (propertyClass.isAssignableFrom(Collection.class)) {
+                        if (Collection.class.isAssignableFrom(propertyClass)) {
                             Collection<?> collection = (Collection<?>) propertyValue;
                             Class<?> collectionImplementation = collection
                                     .getClass();
@@ -147,7 +147,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                                     + propertyDescriptor.getWriteMethod()
                                             .getName() + "(" + collectionName + ");\n")
                                     .getBytes());
-                        } else if (propertyClass.isAssignableFrom(Map.class)) {
+                        } else if (Map.class.isAssignableFrom(propertyClass)) {
                             Map<?, ?> map = (Map<?, ?>) propertyValue;
                             Class<?> mapImplementation = map.getClass();
                             String mapName = getVariableName(mapImplementation,
