@@ -33,6 +33,13 @@
   <scm>
     <connection>scm:svn:https://source.apaxo.de/svn/semrecsys/trunk/java-bean-to-code-serializer</connection>
   </scm>
+  <developers>
+    <developer>
+      <id>Manuel_B</id>
+      <name>Manuel Blechschmidt</name>
+      <email>blechschmidt@apaxo.de</email>
+    </developer>
+  </developers>
   <issueManagement>
     <system>JIRA</system>
     <url>https://dev.apaxo.de:8443/</url>
