@@ -82,17 +82,26 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
     }
 
     /**
+    * Checks if the clazz is a primitive class or if it is a boxed class.
+    * @param clazz the class to check
+    */
+    private boolean isPrimitiveOrBoxClass(Class<?> clazz) {
+        return isPrimitiveOrBoxClass(clazz, true);
+    }
+
+     /**
      * Checks if the clazz is a primitive class or if it is a boxed class.
      * 
      * @param clazz the class to check
+     * @param checkString handle String as primitive class
      * @return is it a primitive or box class
      */
-    private boolean isPrimitiveOrBoxClass(Class<?> clazz) {
+    private boolean isPrimitiveOrBoxClass(Class<?> clazz, boolean checkString) {
         return clazz.isPrimitive() || clazz == Integer.class
                 || clazz == Byte.class || clazz == Boolean.class
                 || clazz == Short.class || clazz == Long.class
                 || clazz == Double.class || clazz == Float.class
-                || clazz == Character.class || clazz == String.class;
+                || clazz == Character.class || (clazz == String.class && checkString);
     }
 
     /**
@@ -107,7 +116,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
         try {
             Class<?> clazz = o.getClass();
             // write primitive types directly out
-            if (isPrimitiveOrBoxClass(clazz)) {
+            if (isPrimitiveOrBoxClass(clazz, false)) {
                 return formatType(clazz, o);
             } else if (clazz == String.class) {
                 return "\"" + o.toString() + "\"";
