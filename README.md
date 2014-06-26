@@ -13,7 +13,7 @@ To use it add the following maven dependency:
   <dependency>
     <groupId>de.apaxo.test</groupId>
     <artifactId>java-bean-to-code-serializer</artifactId>
-    <version>0.6</version>
+    <version>0.7</version>
   </dependency>
 ```
 
