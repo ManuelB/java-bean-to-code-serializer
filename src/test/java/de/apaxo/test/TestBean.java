@@ -17,6 +17,10 @@ public class TestBean implements Serializable {
      * 
      */
     private static final long serialVersionUID = 1439202533001326605L;
+	
+    public static enum MyEnum {
+        MY_ENUM_VALUE;
+    }
 
     /**
      * http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
@@ -30,6 +34,7 @@ public class TestBean implements Serializable {
     private boolean myBoolean;
     private char myChar;
     private String myString;
+    private MyEnum myEnum;
 
     // TODO: Support primitive array types
     private Collection<String> myStringCollection;
@@ -107,6 +112,14 @@ public class TestBean implements Serializable {
 
     public void setMyString(String myString) {
         this.myString = myString;
+    }
+	
+    public MyEnum getMyEnum() {
+        return myEnum;
+    }
+
+    public void setMyEnum(MyEnum myEnum) {
+        this.myEnum = myEnum;
     }
 
     public Collection<String> getMyStringCollection() {

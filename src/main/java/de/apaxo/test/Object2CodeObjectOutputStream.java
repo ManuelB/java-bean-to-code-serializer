@@ -120,6 +120,8 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
                 return formatType(clazz, o);
             } else if (clazz == String.class) {
                 return "\"" + o.toString() + "\"";
+            } else if (clazz.isEnum()) {
+            	return clazz.getName() + "." + ((Enum) o).name();
             }
             BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
             // This should throw an exception if there is no
