@@ -1,4 +1,4 @@
-﻿package de.apaxo.test;
+package de.apaxo.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public class Object2CodeObjectOutputStreamTest {
                             + "de.apaxo.test.TestBean testBean1 = new de.apaxo.test.TestBean();\n"
                             + "testBean1.setMyBoolean(false);\n"
                             + "testBean1.setMyByte((byte) 0);\n"
-                            + "testBean1.setMyChar(' ');\n"
+                            + "testBean1.setMyChar('\0');\n"
                             + "testBean1.setMyDouble(0.0);\n"
                             + "testBean1.setMyFloat(0.0f);\n"
                             + "testBean1.setMyInt(0);\n"
