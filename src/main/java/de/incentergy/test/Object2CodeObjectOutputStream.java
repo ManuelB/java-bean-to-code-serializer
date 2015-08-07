@@ -65,9 +65,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 * @param function
 	 *            the function to use
 	 */
-	public static void addCustomConstructorGenerator(Class<?> clazz,
-			Function<Object, String> function) {
-		class2constructorGenerator.put(clazz, function);
+	@SuppressWarnings("unchecked")
+	public static <T> void addCustomConstructorGenerator(Class<T> clazz,
+			Function<T, String> function) {
+		class2constructorGenerator.put(clazz, (Function<Object, String>) function);
 	}
 	
 	/**
@@ -195,7 +196,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 				}
 				out.write(("new " + clazz.getName() + "()").getBytes());
 			} else {
-				out.write(class2constructorGenerator.get(clazz).apply(o)
+				out.write(class2constructorGenerator.get(clazz).apply(null)
 						.getBytes());
 			}
 			out.write((";\n".getBytes()));
