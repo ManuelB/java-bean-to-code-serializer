@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.apaxo.test</groupId>
+  <groupId>de.incentergy.test</groupId>
   <artifactId>java-bean-to-code-serializer</artifactId>
   <version>0.8-SNAPSHOT</version>
   <name>Java Bean to Code Serializer</name>
@@ -15,8 +15,8 @@
     </license>
   </licenses>
   <properties>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <dependencies>
     <dependency>
@@ -27,59 +27,30 @@
     </dependency>
   </dependencies>
   <organization>
-    <name>Apaxo GmbH</name>
-    <url>http://www.apaxo.de</url>
+    <name>Incentergy GmbH</name>
+    <url>http://www.incentergy.de</url>
   </organization>
   <scm>
-    <url>https://source.apaxo.de/svn/semrecsys/trunk/java-bean-to-code-serializer</url>
-    <connection>scm:svn:https://source.apaxo.de/svn/semrecsys/trunk/java-bean-to-code-serializer</connection>
+    <url>https://github.com/ManuelB/java-bean-to-code-serializer.git</url>
+    <connection>scm:git:https://github.com/ManuelB/java-bean-to-code-serializer.git</connection>
   </scm>
   <developers>
     <developer>
       <id>Manuel_B</id>
       <name>Manuel Blechschmidt</name>
-      <email>blechschmidt@apaxo.de</email>
+      <email>manuel.blechschmidt@incentergy.de</email>
     </developer>
   </developers>
   <issueManagement>
-    <system>JIRA</system>
-    <url>https://dev.apaxo.de:8443/</url>
+    <system>Github</system>
+    <url>https://github.com/ManuelB/java-bean-to-code-serializer/issues</url>
   </issueManagement>
+  <!-- 
   <ciManagement>
     <system>hudson</system>
     <url>https://dev.apaxo.de:8181/hudson</url>
   </ciManagement>
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-      <id>apaxo-snapshots</id>
-      <name>Apaxo snapshots</name>
-      <url>http://dev.apaxo.de:8080/nexus/content/repositories/apaxo-snapshots</url>
-      <layout>default</layout>
-    </repository>
-  </repositories>
-  <!-- 
-	<distributionManagement>
-		<repository>
-			<id>apaxo-releases</id>
-			<url>http://dev.apaxo.de:8080/nexus/content/repositories/apaxo-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>apaxo-snapshots</id>
-			<url>http://dev.apaxo.de:8080/nexus/content/repositories/apaxo-snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
-    -->
+  -->
   <build>
     <plugins>
       <plugin>

@@ -1,4 +1,4 @@
-package de.apaxo.test;
+package de.incentergy.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  * This class is a shortcut to use the {@link Object2CodeObjectOutputStream}
  * class.
  * 
- * @author Manue Blechschmidt <blechschmidt@apaxo.de>
+ * @author Manue Blechschmidt <manuel.blechschmidt@incentergy.de>
  * 
  */
 public class Serialize {
@@ -21,7 +21,7 @@ public class Serialize {
      * This function serializes an object directly to code. You can use a static
      * import to use it.
      * 
-     * import static de.apaxo.test.Serialize.object2code;
+     * import static de.incentergy.test.Serialize.object2code;
      * 
      * System.out.println(object2code(myBean));
      * 

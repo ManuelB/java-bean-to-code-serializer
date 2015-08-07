@@ -1,4 +1,4 @@
-package de.apaxo.test;
+package de.incentergy.test;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -8,7 +8,7 @@ import java.util.Map;
  * This bean is a test for serializing
  * a bean to code to recreate the bean.
  * 
- * @author Manue Blechschmidt <blechschmidt@apaxo.de>
+ * @author Manue Blechschmidt <manuel.blechschmidt@incentergy.de>
  *
  */
 public class TestBean implements Serializable {
