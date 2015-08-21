@@ -68,9 +68,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	@SuppressWarnings("unchecked")
 	public static <T> void addCustomConstructorGenerator(Class<T> clazz,
 			Function<T, String> function) {
-		class2constructorGenerator.put(clazz, (Function<Object, String>) function);
+		class2constructorGenerator.put(clazz,
+				(Function<Object, String>) function);
 	}
-	
+
 	/**
 	 * Removes the custom constructor generator for the specified class.
 	 * 
@@ -79,7 +80,6 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	public static void removeCustomConstructorGenerator(Class<?> clazz) {
 		class2constructorGenerator.remove(clazz);
 	}
-		
 
 	/**
 	 * Writes an object ussing all getters and setters to the given output
@@ -152,6 +152,17 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	}
 
 	/**
+	 * @see Object2CodeObjectOutputStream#writeObject(Object, Map, Map, boolean,
+	 *      int, int)
+	 */
+	private String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
+			Map<Object, String> object2variableName,
+			boolean onlyPropertiesWithMatchingField) {
+		return writeObject(o, clazz2count, object2variableName,
+				onlyPropertiesWithMatchingField, 0, 0);
+	}
+
+	/**
 	 * Private function that is doing the recursive work.
 	 * 
 	 * @param o
@@ -163,12 +174,24 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 *            variable name
 	 * @param onlyPropertiesWithMatchingField
 	 *            check that there is a private property for this field
+	 * @param maxRecusions
+	 *            the maximum of recursions that should be done
+	 * @param currentRecursion
+	 *            the current recursion count
 	 */
 	@SuppressWarnings("rawtypes")
 	private String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
 			Map<Object, String> object2variableName,
-			boolean onlyPropertiesWithMatchingField) {
+			boolean onlyPropertiesWithMatchingField, int maxRecursions,
+			int currentRecursion) {
 		try {
+			// if we already serialized the object
+			// we just output the name of the variable
+			// to create a back reference
+			if (object2variableName.containsKey(o)) {
+				return object2variableName.get(o);
+			}
+
 			Class<?> clazz = o.getClass();
 			// write primitive types directly out
 			if (isPrimitiveOrBoxClass(clazz, false)) {
@@ -182,10 +205,25 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 			String beanName = getVariableName(clazz, clazz2count);
 			object2variableName.put(o, beanName);
 			out.write((clazz.getName() + " " + beanName + " = ").getBytes());
-			// if we have not function to generate the constructors
+
+			if (Collection.class.isAssignableFrom(clazz)) {
+				out.write(("new " + clazz.getName() + "();\n").getBytes());
+				writeCollection(clazz2count, object2variableName,
+						onlyPropertiesWithMatchingField, (Collection) o,
+						beanName, maxRecursions, currentRecursion);
+				return "";
+			} else if (Map.class.isAssignableFrom(clazz)) {
+				out.write(("new " + clazz.getName() + "();\n").getBytes());
+				writeMap(clazz2count, object2variableName,
+						onlyPropertiesWithMatchingField, (Map) o, beanName,
+						maxRecursions, currentRecursion);
+				return "";
+			}
+
+			// if we have no function to generate the constructors
 			if (!class2constructorGenerator.containsKey(clazz)) {
 				// This should throw an exception if there is no
-				// args constructor
+				// no-args constructor
 				try {
 					clazz.getConstructor();
 				} catch (NoSuchMethodException e) {
@@ -198,6 +236,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 			} else {
 				out.write(class2constructorGenerator.get(clazz).apply(null)
 						.getBytes());
+				out.write((";\n".getBytes()));
+				// do not recursively go down when 
+				// a custom constructor was supplied
+				return "";
 			}
 			out.write((";\n".getBytes()));
 			for (PropertyDescriptor propertyDescriptor : beanInfo
@@ -237,9 +279,9 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 						Method writeMethod = propertyDescriptor
 								.getWriteMethod();
 						if (writeMethod != null) {
-							out.write((beanName + "."
-								+ writeMethod.getName()
-								+ "(\"" + propertyValue + "\");\n").getBytes());
+							out.write((beanName + "." + writeMethod.getName()
+									+ "(\"" + propertyValue + "\");\n")
+									.getBytes());
 						} else {
 							log.warning("Can not find write method for: "
 									+ o.getClass().getName() + " "
@@ -257,13 +299,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 									+ collectionName + " = new "
 									+ collectionImplementation.getName() + "();\n")
 									.getBytes());
-							for (Object item : collection) {
-								String itemName = writeObject(item,
-										clazz2count, object2variableName,
-										onlyPropertiesWithMatchingField);
-								out.write((collectionName + ".add(" + itemName + ");\n")
-										.getBytes());
-							}
+							writeCollection(clazz2count, object2variableName,
+									onlyPropertiesWithMatchingField,
+									collection, collectionName, maxRecursions,
+									currentRecursion);
 							out.write((beanName
 									+ "."
 									+ propertyDescriptor.getWriteMethod()
@@ -279,48 +318,41 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 									+ mapName + " = new "
 									+ mapImplementation.getName() + "();\n")
 									.getBytes());
-							for (Entry<?, ?> item : map.entrySet()) {
-								String keyName = object2variableName
-										.containsKey(item.getKey()) ? object2variableName
-										.get(item.getKey()) : writeObject(
-										item.getKey(), clazz2count,
-										object2variableName,
-										onlyPropertiesWithMatchingField);
-								String valueName = object2variableName
-										.containsKey(item.getValue()) ? object2variableName
-										.get(item.getValue()) : writeObject(
-										item.getValue(), clazz2count,
-										object2variableName,
-										onlyPropertiesWithMatchingField);
-
-								out.write((mapName + ".put(" + keyName + ", "
-										+ valueName + ");\n").getBytes());
-							}
+							writeMap(clazz2count, object2variableName,
+									onlyPropertiesWithMatchingField, map,
+									mapName, maxRecursions, currentRecursion);
 							out.write((beanName
 									+ "."
 									+ propertyDescriptor.getWriteMethod()
 											.getName() + "(" + mapName + ");\n")
 									.getBytes());
 						} else if (propertyClass != Class.class) {
-							String newBeanName = object2variableName
-									.containsKey(propertyValue) ? object2variableName
-									.get(propertyValue) : writeObject(
-									propertyValue, clazz2count,
-									object2variableName,
-									onlyPropertiesWithMatchingField);
 
-							Method writeMethod = propertyDescriptor
-									.getWriteMethod();
-							if (writeMethod != null) {
-								out.write((beanName
-										+ "."
-										+ propertyDescriptor.getWriteMethod()
-												.getName() + "(" + newBeanName + ");\n")
-										.getBytes());
-							} else {
-								log.warning("Can not find write method for: "
-										+ o.getClass().getName() + " "
-										+ propertyDescriptor.getName());
+							if (maxRecursions == 0
+									|| maxRecursions < currentRecursion) {
+								String newBeanName = object2variableName
+										.containsKey(propertyValue) ? object2variableName
+										.get(propertyValue) : writeObject(
+										propertyValue, clazz2count,
+										object2variableName,
+										onlyPropertiesWithMatchingField,
+										maxRecursions, currentRecursion + 1);
+
+								Method writeMethod = propertyDescriptor
+										.getWriteMethod();
+								if (writeMethod != null) {
+									out.write((beanName
+											+ "."
+											+ propertyDescriptor
+													.getWriteMethod().getName()
+											+ "(" + newBeanName + ");\n")
+											.getBytes());
+								} else {
+									log.warning("Can not find write method for: "
+											+ o.getClass().getName()
+											+ " "
+											+ propertyDescriptor.getName());
+								}
 							}
 
 						}
@@ -343,6 +375,71 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 		}
 		throw new RuntimeException(
 				"Could not serialize the given object to code. Please see the warnings in the log.");
+	}
+
+	/**
+	 * Writes a map to the output stream.
+	 * 
+	 * @param clazz2count
+	 *            how many classes were already serialized
+	 * @param object2variableName
+	 *            what is the name of cylic references
+	 * @param onlyPropertiesWithMatchingField
+	 * @param collection
+	 *            the name of the collection variable
+	 * @param collectionName
+	 * @throws IOException
+	 */
+	private void writeCollection(Map<Class<?>, Integer> clazz2count,
+			Map<Object, String> object2variableName,
+			boolean onlyPropertiesWithMatchingField, Collection<?> collection,
+			String collectionName, int maxRecursions, int currentRecursion)
+			throws IOException {
+		if (maxRecursions == 0 || maxRecursions < currentRecursion) {
+			for (Object item : collection) {
+				String itemName = writeObject(item, clazz2count,
+						object2variableName, onlyPropertiesWithMatchingField,
+						maxRecursions, currentRecursion + 1);
+				out.write((collectionName + ".add(" + itemName + ");\n")
+						.getBytes());
+			}
+		}
+	}
+
+	/**
+	 * Writes a map to the output stream.
+	 * 
+	 * @param clazz2count
+	 * @param object2variableName
+	 * @param onlyPropertiesWithMatchingField
+	 * @param map
+	 * @param mapName
+	 * @throws IOException
+	 */
+	private void writeMap(Map<Class<?>, Integer> clazz2count,
+			Map<Object, String> object2variableName,
+			boolean onlyPropertiesWithMatchingField, Map<?, ?> map,
+			String mapName, int maxRecursions, int currentRecursion)
+			throws IOException {
+
+		if (maxRecursions == 0 || maxRecursions == currentRecursion) {
+			for (Entry<?, ?> item : map.entrySet()) {
+				String keyName = object2variableName.containsKey(item.getKey()) ? object2variableName
+						.get(item.getKey()) : writeObject(item.getKey(),
+						clazz2count, object2variableName,
+						onlyPropertiesWithMatchingField, maxRecursions,
+						currentRecursion + 1);
+				String valueName = object2variableName.containsKey(item
+						.getValue()) ? object2variableName.get(item.getValue())
+						: writeObject(item.getValue(), clazz2count,
+								object2variableName,
+								onlyPropertiesWithMatchingField, maxRecursions,
+								currentRecursion + 1);
+
+				out.write((mapName + ".put(" + keyName + ", " + valueName + ");\n")
+						.getBytes());
+			}
+		}
 	}
 
 	/**
