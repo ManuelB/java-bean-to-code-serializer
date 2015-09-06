@@ -90,7 +90,7 @@ public class Object2CodeObjectOutputStreamTest {
 
 			object2CodeObjectOutputStream.writeObject(testBean0);
 			String code = byteArrayOutputStream.toString();
-			log.info(code);
+			// log.info(code);
 			assertEquals(
 					"de.incentergy.test.TestBean testBean0 = new de.incentergy.test.TestBean();\n"
 							+ "testBean0.setMyBoolean(true);\n"
@@ -142,8 +142,11 @@ public class Object2CodeObjectOutputStreamTest {
 
 			object2CodeObjectOutputStream.writeObject(testBean0);
 			String code = byteArrayOutputStream.toString();
-			log.info(code);
-
+			// log.info(code);
+			assertEquals("de.incentergy.test.TestBeanWithCustomClassConstructor testBeanWithCustomClassConstructor0 = new de.incentergy.test.TestBeanWithCustomClassConstructor();\n" + 
+					"java.util.GregorianCalendar gregorianCalendar0 = Calendar.getInstance();\n" + 
+					"testBeanWithCustomClassConstructor0.setCalendar(gregorianCalendar0);\n" + 
+					"", code);
 		}
 	}
 }

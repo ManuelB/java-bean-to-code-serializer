@@ -40,6 +40,12 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	private static Map<Class<?>, Function<Object, String>> class2constructorGenerator = new HashMap<>();
 
 	/**
+	 * This map can contain for a class a map that decides if only certain
+	 * fields should be serialized. The fields are given as strings
+	 */
+	private static Map<Class<?>, Map<String, Boolean>> class2fieldIncludes = new HashMap<>();
+
+	/**
 	 * The OutputStream to write the object to.
 	 */
 	private OutputStream out;
@@ -57,6 +63,30 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 		this.out = out;
 	}
 
+	/**
+	 * Only include this field for the class.
+	 * 
+	 * @param clazz
+	 * @param field
+	 */
+	public static void includeFieldForClass(Class<?> clazz, String field) {
+		Map<String, Boolean> includes = class2fieldIncludes.get(clazz);
+		if(includes == null) {
+			includes = new HashMap<>();
+			class2fieldIncludes.put(clazz, includes);
+		}
+		includes.put(field, true);
+	}
+	
+	/**
+	 * Removes all the includes for the class.
+	 * 
+	 * @param clazz
+	 */
+	public static void removeAllIncludesForClass(Class<?> clazz) {
+		class2fieldIncludes.remove(clazz);
+	}
+	
 	/**
 	 * Adds a custom constructor generator for a specified class.
 	 * 
@@ -234,16 +264,31 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 				}
 				out.write(("new " + clazz.getName() + "()").getBytes());
 			} else {
-				out.write(class2constructorGenerator.get(clazz).apply(null)
+				out.write(class2constructorGenerator.get(clazz).apply(o)
 						.getBytes());
 				out.write((";\n".getBytes()));
-				// do not recursively go down when 
+				// do not recursively go down when
 				// a custom constructor was supplied
-				return "";
+				// just return the name of the variable
+				return beanName;
 			}
 			out.write((";\n".getBytes()));
 			for (PropertyDescriptor propertyDescriptor : beanInfo
 					.getPropertyDescriptors()) {
+
+				// if we should only include certain fields
+				if (class2fieldIncludes.containsKey(clazz)) {
+					// check if the current field should
+					// be included
+					if (class2fieldIncludes.get(clazz).get(
+							propertyDescriptor.getName()) == null
+							|| !class2fieldIncludes.get(clazz).get(
+									propertyDescriptor.getName())) {
+						// if not continue
+						continue;
+					}
+				}
+
 				if (onlyPropertiesWithMatchingField) {
 					try {
 						clazz.getDeclaredField(propertyDescriptor.getName());

@@ -41,6 +41,11 @@
 			<email>manuel.blechschmidt@incentergy.de</email>
 		</developer>
 	</developers>
+	<!--
+	     mvn release:prepare
+	     mvn release:perform -Darguments="-Dgpg.passphrase='' -DaltDeploymentRepository=sonatype-nexus-staging::default::https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+	     #  https://oss.sonatype.org/#stagingRepositories
+        -->
 	<issueManagement>
 		<system>Github</system>
 		<url>https://github.com/ManuelB/java-bean-to-code-serializer/issues</url>
@@ -117,6 +122,7 @@
 				  </execution>
 			  </executions>
 		  </plugin>
+		  <!--
 		  <plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-javadoc-plugin</artifactId>
@@ -130,6 +136,7 @@
 				  </execution>
 			  </executions>
 		  </plugin>
+                  -->
 	  </plugins>
   </build>
   <profiles>
