@@ -11,10 +11,9 @@ To see a code example:
 To use it add the following maven dependency:
 ```
   <dependency>
-    <groupId>de.apaxo.test</groupId>
+    <groupId>de.incentergy.test</groupId>
     <artifactId>java-bean-to-code-serializer</artifactId>
-    <version>0.7</version>
+    <version>0.8</version>
   </dependency>
 ```
 
-This code is used in the [Apaxo GmbH Platform](http://www.apaxo.de)
