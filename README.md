@@ -6,7 +6,7 @@ This code takes a java bean and tries to serialize it as java code that sets rec
 This should be used together with mockito and https://github.com/ManuelB/mockito-caching-spy
 
 To see a code example:
- * [Object2CodeObjectOutputStreamTest.java](https://github.com/ManuelB/java-bean-to-code-serializer/blob/master/src/test/java/de/apaxo/test/Object2CodeObjectOutputStreamTest.java)
+ * [Object2CodeObjectOutputStreamTest.java](https://github.com/ManuelB/java-bean-to-code-serializer/blob/master/src/test/java/de/incentergy/test/Object2CodeObjectOutputStreamTest.java)
 
 To use it add the following maven dependency:
 ```
