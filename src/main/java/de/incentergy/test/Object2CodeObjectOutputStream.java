@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * 
  * Generic information will be lost during the serialization.
  * 
- * @author Manuel Blechschmidt <manuel.blechschmidt@incentergy.de>
+ * @author <a href="mailto:manuel.blechschmidt@incentergy.de">Manuel Blechschmidt</a>
  * 
  */
 public class Object2CodeObjectOutputStream implements AutoCloseable {
@@ -56,7 +56,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 * Object2CodeObjectOutputStream(System.out); There is also a shortcut in
 	 * {@link de.incentergy.test.Serialize#object2code(Object)}
 	 * 
-	 * @paramt out the outputstream to use to write the code into
+	 * @param out the outputstream to use to write the code into
 	 */
 	public Object2CodeObjectOutputStream(OutputStream out) throws IOException,
 			SecurityException {
@@ -66,8 +66,8 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	/**
 	 * Only include this field for the class.
 	 * 
-	 * @param clazz
-	 * @param field
+	 * @param clazz the class for that we are adding a field
+	 * @param field the name of the field that we should include
 	 */
 	public static void includeFieldForClass(Class<?> clazz, String field) {
 		Map<String, Boolean> includes = class2fieldIncludes.get(clazz);
@@ -81,7 +81,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	/**
 	 * Removes all the includes for the class.
 	 * 
-	 * @param clazz
+	 * @param clazz the class for that we should remove all fields
 	 */
 	public static void removeAllIncludesForClass(Class<?> clazz) {
 		class2fieldIncludes.remove(clazz);
@@ -105,7 +105,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	/**
 	 * Removes the custom constructor generator for the specified class.
 	 * 
-	 * @param clazz
+	 * @param clazz the class for that we should remove the custom constructor
 	 */
 	public static void removeCustomConstructorGenerator(Class<?> clazz) {
 		class2constructorGenerator.remove(clazz);
@@ -454,12 +454,12 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	/**
 	 * Writes a map to the output stream.
 	 * 
-	 * @param clazz2count
-	 * @param object2variableName
-	 * @param onlyPropertiesWithMatchingField
-	 * @param map
-	 * @param mapName
-	 * @throws IOException
+	 * @param clazz2count how often did we already serialize this class
+	 * @param object2variableName what is the variable name of this object
+	 * @param onlyPropertiesWithMatchingField only serialize getters where there is a field
+	 * @param map the map to serialize
+	 * @param mapName the variable name of the map
+	 * @throws IOException is thrown when we can not write to the stream
 	 */
 	private void writeMap(Map<Class<?>, Integer> clazz2count,
 			Map<Object, String> object2variableName,

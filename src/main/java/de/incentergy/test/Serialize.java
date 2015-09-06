@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  * This class is a shortcut to use the {@link Object2CodeObjectOutputStream}
  * class.
  * 
- * @author Manue Blechschmidt <manuel.blechschmidt@incentergy.de>
+ * @author <a href="mailto:manuel.blechschmidt@incentergy.de">Manue Blechschmidt</a>
  * 
  */
 public class Serialize {
