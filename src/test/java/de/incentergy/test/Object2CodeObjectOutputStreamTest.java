@@ -149,4 +149,31 @@ public class Object2CodeObjectOutputStreamTest {
 					"", code);
 		}
 	}
+	
+	@Test
+	public void testWriteObjectWithProcessor()
+			throws SecurityException, IOException {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		try (Object2CodeObjectOutputStream object2CodeObjectOutputStream = new Object2CodeObjectOutputStream(
+				byteArrayOutputStream)) {
+
+			// Add a processor that makes a string from every Integer
+			Object2CodeObjectOutputStream.addProcessor((o) -> o instanceof Integer ? o.toString() : o);
+
+			Integer i = new Integer(1);
+
+			object2CodeObjectOutputStream.writeObject(i);
+			String code = byteArrayOutputStream.toString();
+
+			assertEquals("\"1\"", code);
+			
+			Object2CodeObjectOutputStream.clearProcessor();
+			byteArrayOutputStream.reset();
+			object2CodeObjectOutputStream.writeObject(i);
+			
+			code = byteArrayOutputStream.toString();
+			// log.info(code);
+			assertEquals("1", code);
+		}
+	}
 }
