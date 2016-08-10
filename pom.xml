@@ -56,6 +56,12 @@
     <url>https://dev.apaxo.de:8181/hudson</url>
   </ciManagement>
   -->
+<distributionManagement>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+</distributionManagement>
   <build>
 	  <plugins>
 		  <plugin>
