@@ -70,11 +70,11 @@
   <build>
     <plugins>
       <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-release-plugin -->
-      <dependency>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
-      </dependency>
+      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
