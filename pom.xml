@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.incentergy.test</groupId>
   <artifactId>java-bean-to-code-serializer</artifactId>
-  <version>0.9</version>
+  <version>0.10-SNAPSHOT</version>
   <name>Java Bean to Code Serializer</name>
   <description>This code takes a java bean and tries to serialize it as java code that sets recursively all the fields. This is useful if you want to mock an object and already get the object somewhere but you want to put it in the code.</description>
   <url>https://github.com/ManuelB/java-bean-to-code-serializer/</url>
@@ -34,7 +34,7 @@
   <scm>
     <url>https://github.com/ManuelB/java-bean-to-code-serializer.git</url>
     <connection>scm:git:https://github.com/ManuelB/java-bean-to-code-serializer.git</connection>
-    <tag>java-bean-to-code-serializer-0.9</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
