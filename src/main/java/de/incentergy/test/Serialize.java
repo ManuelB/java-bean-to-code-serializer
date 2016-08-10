@@ -37,9 +37,6 @@ public class Serialize {
         } catch (SecurityException e) {
             log.log(Level.WARNING, "Excetion was thrown", e);
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Excetion was thrown", e);
-            throw new RuntimeException(e);
         }
     }
 }

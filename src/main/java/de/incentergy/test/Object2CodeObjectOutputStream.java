@@ -68,8 +68,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 * @param out
 	 *            the outputstream to use to write the code into
 	 */
-	public Object2CodeObjectOutputStream(OutputStream out)
-			throws IOException, SecurityException {
+	public Object2CodeObjectOutputStream(OutputStream out) {
 		this.out = out;
 	}
 
@@ -107,6 +106,8 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 *            the class typically without not args constructors
 	 * @param function
 	 *            the function to use
+	 * @param <T>
+	 *            the class this constructor should be used for
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> void addCustomConstructorGenerator(Class<T> clazz,
@@ -124,26 +125,24 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	public static void removeCustomConstructorGenerator(Class<?> clazz) {
 		class2constructorGenerator.remove(clazz);
 	}
-	
+
 	/**
 	 * Adds a processor to process classes before serializing.
 	 * 
-	 * @param f processor to add
+	 * @param f
+	 *            processor to add
 	 */
-	public static void addProcessor(Function<Object,Object> f) {
+	public static void addProcessor(Function<Object, Object> f) {
 		processors.add(f);
 	}
-	
+
 	/**
 	 * Clear processors.
 	 * 
-	 * @param f
 	 */
 	public static void clearProcessor() {
 		processors.clear();
 	}
-	
-	
 
 	/**
 	 * Writes an object ussing all getters and setters to the given output
@@ -219,7 +218,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 * @see Object2CodeObjectOutputStream#writeObject(Object, Map, Map, boolean,
 	 *      int, int)
 	 */
-	protected String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
+	private String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
 			Map<Object, String> object2variableName,
 			boolean onlyPropertiesWithMatchingField) {
 		return writeObject(o, clazz2count, object2variableName,
@@ -238,10 +237,13 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 	 *            variable name
 	 * @param onlyPropertiesWithMatchingField
 	 *            check that there is a private property for this field
-	 * @param maxRecusions
+	 * @param maxRecursions
 	 *            the maximum of recursions that should be done
 	 * @param currentRecursion
 	 *            the current recursion count
+	 * 
+	 * @return the object represented as a string. If the string is compiled it
+	 *         will create the same object again
 	 */
 	@SuppressWarnings("rawtypes")
 	protected String writeObject(Object o, Map<Class<?>, Integer> clazz2count,
@@ -249,10 +251,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 			boolean onlyPropertiesWithMatchingField, int maxRecursions,
 			int currentRecursion) {
 		try {
-			for(Function<Object, Object> f : processors) {
+			for (Function<Object, Object> f : processors) {
 				o = f.apply(o);
 			}
-			
+
 			// if we already serialized the object
 			// we just output the name of the variable
 			// to create a back reference
