@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -101,7 +101,7 @@
 		  <plugin>
 			  <groupId>org.sonatype.plugins</groupId>
 			  <artifactId>nexus-staging-maven-plugin</artifactId>
-			  <version>1.6.3</version>
+			  <version>1.6.7</version>
 			  <extensions>true</extensions>
 			  <configuration>
 				  <serverId>ossrh</serverId>
