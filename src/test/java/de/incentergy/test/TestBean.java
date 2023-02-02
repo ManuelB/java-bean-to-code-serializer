@@ -21,6 +21,17 @@ public class TestBean implements Serializable {
     public static enum MyEnum {
         MY_ENUM_VALUE;
     }
+    public static class MyInnerClass {
+        String value;
+    
+        public String getValue() {
+            return value;
+        }
+    
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
 
     /**
      * http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
@@ -35,6 +46,7 @@ public class TestBean implements Serializable {
     private char myChar;
     private String myString;
     private MyEnum myEnum;
+    private MyInnerClass myInnerClass;
 
     // TODO: Support primitive array types
     private Collection<String> myStringCollection;
@@ -121,7 +133,15 @@ public class TestBean implements Serializable {
     public void setMyEnum(MyEnum myEnum) {
         this.myEnum = myEnum;
     }
-
+    
+    public MyInnerClass getMyInnerClass() {
+        return myInnerClass;
+    }
+    
+    public void setMyInnerClass(MyInnerClass myInnerClass) {
+        this.myInnerClass = myInnerClass;
+    }
+    
     public Collection<String> getMyStringCollection() {
         return myStringCollection;
     }

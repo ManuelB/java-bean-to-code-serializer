@@ -269,21 +269,21 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 			} else if (clazz == String.class) {
 				return "\"" + o.toString() + "\"";
 			} else if (clazz.isEnum()) {
-				return clazz.getName() + "." + ((Enum) o).name();
+				return clazz.getCanonicalName() + "." + ((Enum) o).name();
 			}
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			String beanName = getVariableName(clazz, clazz2count);
 			object2variableName.put(o, beanName);
-			out.write((clazz.getName() + " " + beanName + " = ").getBytes());
+			out.write((clazz.getCanonicalName() + " " + beanName + " = ").getBytes());
 
 			if (Collection.class.isAssignableFrom(clazz)) {
-				out.write(("new " + clazz.getName() + "();\n").getBytes());
+				out.write(("new " + clazz.getCanonicalName() + "();\n").getBytes());
 				writeCollection(clazz2count, object2variableName,
 						onlyPropertiesWithMatchingField, (Collection) o,
 						beanName, maxRecursions, currentRecursion);
 				return "";
 			} else if (Map.class.isAssignableFrom(clazz)) {
-				out.write(("new " + clazz.getName() + "();\n").getBytes());
+				out.write(("new " + clazz.getCanonicalName() + "();\n").getBytes());
 				writeMap(clazz2count, object2variableName,
 						onlyPropertiesWithMatchingField, (Map) o, beanName,
 						maxRecursions, currentRecursion);
@@ -299,10 +299,10 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 				} catch (NoSuchMethodException e) {
 					log.log(Level.WARNING, "Exception was thrown", e);
 					return "null /* Could not generate code for "
-							+ clazz.getName()
+							+ clazz.getCanonicalName()
 							+ " there is not no args constructor */";
 				}
-				out.write(("new " + clazz.getName() + "()").getBytes());
+				out.write(("new " + clazz.getCanonicalName() + "()").getBytes());
 			} else {
 				out.write(class2constructorGenerator.get(clazz).apply(o)
 						.getBytes());
@@ -566,7 +566,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 		} else if (clazz == Integer.TYPE || clazz == Integer.class) {
 			return value.toString();
 		} else {
-			throw new IllegalArgumentException("Type " + clazz.getName()
+			throw new IllegalArgumentException("Type " + clazz.getCanonicalName()
 					+ " is not a supported primitive type.");
 		}
 	}

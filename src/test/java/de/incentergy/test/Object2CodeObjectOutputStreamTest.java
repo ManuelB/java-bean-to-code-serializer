@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import de.incentergy.test.TestBean.MyInnerClass;
 import org.junit.Test;
 
 public class Object2CodeObjectOutputStreamTest {
@@ -74,6 +75,9 @@ public class Object2CodeObjectOutputStreamTest {
 			testBean0.setMyChar('k');
 			testBean0.setMyString("String");
 			testBean0.setMyEnum(TestBean.MyEnum.MY_ENUM_VALUE);
+			MyInnerClass myInnerClass0 = new MyInnerClass();
+			myInnerClass0.setValue("Inner String");
+			testBean0.setMyInnerClass(myInnerClass0);
 
 			Collection<String> strings = new ArrayList<String>(Arrays.asList(
 					"one", "two", "three"));
@@ -97,8 +101,12 @@ public class Object2CodeObjectOutputStreamTest {
 							+ "testBean0.setMyByte((byte) 82);\n"
 							+ "testBean0.setMyChar('k');\n"
 							+ "testBean0.setMyDouble(2.3);\n"
-							+ "testBean0.setMyEnum(de.incentergy.test.TestBean$MyEnum.MY_ENUM_VALUE);\n"
+							+ "testBean0.setMyEnum(de.incentergy.test.TestBean.MyEnum.MY_ENUM_VALUE);\n"
 							+ "testBean0.setMyFloat(2.3f);\n"
+							+ "de.incentergy.test.TestBean.MyInnerClass myInnerClass0 ="
+							+ " new de.incentergy.test.TestBean.MyInnerClass();\n"
+							+ "myInnerClass0.setValue(\"Inner String\");\n"
+							+ "testBean0.setMyInnerClass(myInnerClass0);\n"
 							+ "testBean0.setMyInt(255);\n"
 							+ "testBean0.setMyLong(656l);\n"
 							+ "testBean0.setMyShort((short)45);\n"
