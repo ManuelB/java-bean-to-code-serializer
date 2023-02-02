@@ -1,6 +1,7 @@
 package de.incentergy.test;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ public class TestBean implements Serializable {
     private float myFloat;
     private double myDouble;
     private boolean myBoolean;
+    private BigDecimal myBigDecimal;
     private char myChar;
     private String myString;
     private MyEnum myEnum;
@@ -109,7 +111,15 @@ public class TestBean implements Serializable {
     public void setMyBoolean(boolean myBoolean) {
         this.myBoolean = myBoolean;
     }
-
+    
+    public BigDecimal getMyBigDecimal() {
+        return myBigDecimal;
+    }
+    
+    public void setMyBigDecimal(BigDecimal myBigDecimal) {
+        this.myBigDecimal = myBigDecimal;
+    }
+    
     public char getMyChar() {
         return myChar;
     }

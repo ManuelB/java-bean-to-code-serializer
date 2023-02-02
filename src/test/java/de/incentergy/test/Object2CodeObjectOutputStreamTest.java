@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,6 +72,7 @@ public class Object2CodeObjectOutputStreamTest {
 			testBean0.setMyLong(656l);
 			testBean0.setMyFloat(2.3f);
 			testBean0.setMyDouble(2.3);
+			testBean0.setMyBigDecimal(BigDecimal.valueOf(123.4567890123));
 			testBean0.setMyBoolean(true);
 			testBean0.setMyChar('k');
 			testBean0.setMyString("String");
@@ -97,6 +99,7 @@ public class Object2CodeObjectOutputStreamTest {
 			// log.info(code);
 			assertEquals(
 					"de.incentergy.test.TestBean testBean0 = new de.incentergy.test.TestBean();\n"
+							+ "testBean0.setMyBigDecimal(new BigDecimal(\"123.4567890123\"));\n"
 							+ "testBean0.setMyBoolean(true);\n"
 							+ "testBean0.setMyByte((byte) 82);\n"
 							+ "testBean0.setMyChar('k');\n"

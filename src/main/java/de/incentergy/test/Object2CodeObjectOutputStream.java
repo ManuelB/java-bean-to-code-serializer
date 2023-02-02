@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -210,6 +211,7 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 				|| clazz == Byte.class || clazz == Boolean.class
 				|| clazz == Short.class || clazz == Long.class
 				|| clazz == Double.class || clazz == Float.class
+				|| clazz == BigDecimal.class
 				|| clazz == Character.class
 				|| (clazz == String.class && checkString);
 	}
@@ -565,6 +567,8 @@ public class Object2CodeObjectOutputStream implements AutoCloseable {
 			return value.toString();
 		} else if (clazz == Integer.TYPE || clazz == Integer.class) {
 			return value.toString();
+		} else if (clazz == BigDecimal.class && value instanceof BigDecimal) {
+			return "new BigDecimal(\""+value.toString()+"\")";
 		} else {
 			throw new IllegalArgumentException("Type " + clazz.getCanonicalName()
 					+ " is not a supported primitive type.");
