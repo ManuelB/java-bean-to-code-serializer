@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.incentergy.test</groupId>
   <artifactId>java-bean-to-code-serializer</artifactId>
-  <version>0.10-SNAPSHOT</version>
+  <version>0.10</version>
   <name>Java Bean to Code Serializer</name>
   <description>This code takes a java bean and tries to serialize it as java code that sets recursively all the fields. This is useful if you want to mock an object and already get the object somewhere but you want to put it in the code.</description>
   <url>https://github.com/ManuelB/java-bean-to-code-serializer/</url>
@@ -34,7 +34,7 @@
   <scm>
     <url>https://github.com/ManuelB/java-bean-to-code-serializer.git</url>
     <connection>scm:git:https://github.com/ManuelB/java-bean-to-code-serializer.git</connection>
-    <tag>HEAD</tag>
+    <tag>java-bean-to-code-serializer-0.10</tag>
   </scm>
   <developers>
     <developer>
@@ -76,6 +76,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
       </plugin>
+<!-- Prevent VM crash
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -115,7 +116,8 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+	</plugin>
+-->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
