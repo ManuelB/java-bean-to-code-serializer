@@ -13,7 +13,7 @@ To use it add the following maven dependency:
   <dependency>
     <groupId>de.incentergy.test</groupId>
     <artifactId>java-bean-to-code-serializer</artifactId>
-    <version>0.8</version>
+    <version>0.10</version>
   </dependency>
 ```
 
